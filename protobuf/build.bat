@@ -1,0 +1,1 @@
+protoc --go_out=. go_side.proto

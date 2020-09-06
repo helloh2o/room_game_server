@@ -1,0 +1,156 @@
+record_player_info = {
+     oid                    // int
+	, id                    // string
+	, idtype                // string
+	, nick_name             // string
+	, gold                  // int
+	, sex                   // int
+    , portrait              // string
+    , ip                    // string
+    , location              // string
+    , money                 // int
+};
+
+record_hu_desc = {
+    type1                   // int      
+    , type2                 // int
+    , gen                   // int
+    , self_mo               // boolean
+	, fan					// int
+	, types	= []			// int
+    , order					// int
+    , give_hu_seat          // int
+};
+
+record_complex_tile {
+	type                    // int
+	, id                    // int
+    , ids = []              // int[]
+}	
+
+record_handcards_info = {
+    lack                    // int
+    , is_hu                 // boolean
+    , hu_seq = []           // int[]
+    , hand_seq_count	    // int
+	, mo_count              // int
+    , hand_seq = []         // int
+    , complex_seq = []      // record_complex_tile
+    , chued_seq = []        // int
+    , hu_desc               // record_hu_desc
+}
+
+record_seat_info = {
+	seat_index
+    , player_info           // record_player_info
+    , handcards_info        // record_handcards_info         
+};
+
+record_room_info = {
+    roomid                   // int
+    , room_pwd               // string
+    , room_base              // int
+    , gametype               // string
+    , place                  // string
+    , rules                  // json string
+};
+
+
+record_money_transfer = {
+    person                  // int
+    , atm                   // int
+    , money                 // int
+    , transfer              // int
+    , point                 // int
+};
+
+record_huanpai_info = {
+    exchange_type           // int
+    , in_cards              // int[]
+    , out_cards             // int[]
+	, mai_pai				// boolean
+}
+
+record_end_seat_info = {
+    seat_index
+    , wan_gang_mt           // record_money_transfer
+    , maipai_mt             // record_money_transfer
+    , zhi_gang_mt           // record_money_transfer
+    , an_gang_mt            // record_money_transfer
+    , hu_mt                 // record_money_transfer
+    , hua_zhu_mt            // record_money_transfer
+    , da_jiao_mt            // record_money_transfer
+    , da_jiao_desc          // record_hu_desc
+    , handcards             // record_handcards_info
+    , total_gold            // int64
+    , money_change          // int64    
+}
+
+record_end_info = {
+    seat_info = []          // record_end_seat_info[]
+    , liuju                 // boolean
+    , game_group_count      // int
+    , is_game_group_end     // boolean
+}
+
+record_total_seat_info = {
+    socre                   // int 总分数
+	, consume_card			// int 消耗房卡数
+    , is_big_winner           // boolean
+    , is_best_shooter        // 最佳炮手
+    , result_times = [
+        {
+            type            // int 1:自摸 2:接炮 3:点炮 4:暗杠 5:明杠
+            , times         // int
+        }
+    ]
+}
+
+record_total_end_info = {
+    seat_info = []          // record_total_seat_info
+}
+
+record_ready_room = {
+    msg_type = "record_read_room"
+    , room_info             // record_room_info
+}
+
+record_start_game = {
+    msg_type = "record_start_game"
+    , banker_seat           // int
+    , curr_turn             // int
+    , tiles_remain          // int
+    , huanpai_info = []     // record_huanpai_info
+    , seat_info = []        // record_seat_info
+};
+
+record_game_turn = {
+    msg_type = "record_game_turn"
+    , seat_index            // int
+    , mo                    // boolean 
+    , mo_tile_id            // int
+    , tiles_remain          // int
+};
+
+record_game_action = {
+    msg_type = "record_game_action"
+    , id                    // int
+    , sub_id                // int
+    , money_transfer        // record_money_transfer
+    , tile_type_or_id       // int
+    , act_seat_index        // int
+    , acted_seat_index      // int
+    , handcards             // record_handcards_info
+    , tiles_remain          // int
+}
+
+game_record = {
+    ready                   // record_ready_room
+    rounds = [
+        round               // integer
+        , start             // record_start_game
+        , gameing = []      // record_game_turn or record_game_action
+        , end_info          // record_end_info           
+    ]
+    , all_end =             // record_total_end_info
+}

@@ -1,0 +1,135 @@
+syntax = "proto3";
+package wstest;
+option go_package = ".;protobuf";
+// 用消息0
+// 协议
+message Protocol {
+    uint32 id = 1;
+    bytes content = 2;
+}
+
+message Test {
+    uint32 id = 1;
+}
+
+message ProtocolPack {
+    uint32 id = 1;
+    repeated Protocol pack = 2;
+}
+
+// 进入房间
+message EnterRoom {
+    string player = 1;
+    string room = 2; // 房间类型eg: classic_ddz
+}
+
+message sc_enter_room {
+    int32 seat_index			   = 2;
+    repeated scenter_seat_info seat_infoes = 3;
+    int32  room_base               = 7;
+    string game_config            = 8;
+    string gametype               = 9; //wzmj, bloodwar
+    string place                  = 10; //custom, wzmj_c1
+    string room_pwd               = 11; //房间密码
+    int32  current_round          = 12; //当前局数
+    int32 owner_seat              = 13; // 房主
+    int32 creater_id               = 14;
+    string creater_type             = 15;
+    bool dismiss_apply               = 16;
+    int32 dismiss_second             = 17;
+    repeated st_dismiss_info dismiss_info     = 18;  //0代表可以选择，1代表同意, 2代表拒绝
+    repeated int32 show_actions = 19;
+}
+message scenter_seat_info {
+    stplayer_info  player_info   = 1;
+    bool ready					  = 2;
+    int32 seat_index             = 3;
+    int32 money                  = 4;
+}
+
+message stplayer_info {
+    int64  oid 	              = 1;
+    string id					  = 2;
+    string idtype				  = 3;
+    string nick_name	          = 4;
+    int64 room_card              = 5;
+    double gold		          = 6;
+    int32  sex		              = 7;
+    string portrait              = 8;
+    string ip                    = 9;
+    string location              = 10;
+    int32 exp                    = 11;
+    bool online                  = 12;
+    bool auto_play 			  = 13;
+    string signature             = 14;
+}
+
+message st_dismiss_info {
+    int32 seat_index = 1;
+    int32 dismiss = 2;
+}
+
+// 创建房间
+message CreateRoom {
+    string id = 1;
+}
+message CSEnterRoom {
+    int32 seat_index = 2;
+}
+// 登录1
+message Login {
+    string username = 1;
+    string password = 2;
+    string verify = 3;
+    string device = 4;
+    string ver = 5;
+    string channel = 6; // 渠道
+}
+// 注册2
+message Register {
+    string username = 1;
+    string password = 2;
+    string cellphone = 3; // 手机
+    string verify = 4; // 验证信息
+    string device = 6; //设备号
+    string ver = 7; //版本
+    string local = 8; // 地区
+    string channel = 9; // 渠道
+}
+// 房间操作
+message RoomOP {
+    int32 id = 1;
+    string from = 2;
+    string playerJson = 3;
+}
+// 登录数据
+message LoginOK {
+    string player = 1; // 用户数据
+}
+
+// 操作结果
+message Result {
+    int32 code = 1; // code=-1 失败
+    string reason = 2; //失败原因
+}
+
+// 公告列表
+message NoticeList {
+    repeated Notice pack = 1;
+}
+// 公告
+message Notice {
+    string title = 1;
+    string content = 2;
+}
+// 活动列表
+message ActivitiesList {
+    repeated Activity pack = 1;
+}
+// 活动
+message Activity {
+    string title = 1;
+    string content = 2;
+    string img = 3;
+    string time = 4;
+}

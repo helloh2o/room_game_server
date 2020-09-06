@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>websocket 例子</title>
+</head>
+<script src="protobuf.min.js"></script>
+<script type="text/javascript">
+    // JSON 例子
+    //var ws = new WebSocket('ws://127.0.0.1:3565')
+    /*var ws = new WebSocket('ws://120.26.45.235:3565')
+    ws.onopen = function() {
+        // 发送 Hello 消息
+        ws.send(JSON.stringify({
+            "Room": {
+                "id": 1001,
+                "token":"1000"
+            }
+        }))
+        ws.onmessage = function (ev) {
+            console.log(ev.data)
+        }
+    }*/
+
+    // Protobuf 例子
+    var Protocol;
+    var msg;
+    var sc_enter_room
+    var bufferMsg;
+    var Enter
+    protobuf.load("./base.proto", function (err, root) {
+        if (err) throw err;
+        Protocol = root.lookup("wstest.Protocol");
+        Enter = root.lookup("wstest.EnterRoom");
+        sc_enter_room = root.lookup("wstest.sc_enter_room");
+        begin()
+    });
+    // begin
+    var begin = function () {
+        // enterinfo
+        var enterMsg = Enter.create({player: "", room:"classic_ddz"});
+        var enterBuffer = Enter.encode(enterMsg).finish();
+        // 新建
+        msg = Protocol.create({id: 0x101, content: enterBuffer});
+        bufferMsg = Protocol.encode(msg).finish();
+        // 头部
+        var pkg_len = 2 + bufferMsg.length
+        var pkg_buffer = new ArrayBuffer(pkg_len)
+        var viewer = new DataView(pkg_buffer, 0, pkg_len);
+        // 下面这行代码websocket在发送的时候自动在前面加上了包大小
+        //viewer.setUint16(0,pkg_len-2,false) // 包体大小 写在头  [前两个字节]
+        viewer.setUint16(0,0,false) // 消息ID 0 [包体前两个字节表示leaf protobuf的消息隐射ID]
+        // 重组,这里应该有更好的方法
+        for(var i=0;i<bufferMsg.length;i++){
+            viewer.setUint8(i+2,bufferMsg[i])
+        }
+        // 包消息
+        var one_package = pkg_buffer;// concat(bufferMsg)
+        console.log(one_package)
+        // 发送
+        var ws = new WebSocket('ws://127.0.0.1:3565')
+        //var ws = new WebSocket('ws://120.26.45.235:3565')
+        ws.binaryType="arraybuffer";
+        ws.onopen = function() {
+            // 发送 Hello 消息
+            ws.send(one_package)
+            ws.onmessage = function (ev) {
+                console.log(ev.data)
+                var array = new Uint8Array(ev.data);
+                // leaf的protobuf消息ID, 0代表Protocol包
+                var id = array.subarray(0,2)
+                // Protocol包体
+                var body = array.subarray(2,array.length)
+                var p = Protocol.decode(body);
+                // p.content []uint8 对应的游戏消息实体
+                console.log("Protocol pkg id ==>",p.id)
+                var enter = sc_enter_room.decode(p.content)
+                console.log("seatIndex::",enter.seatIndex)
+            }
+        }
+    }
+</script>
+<body>
+
+</body>
+</html>

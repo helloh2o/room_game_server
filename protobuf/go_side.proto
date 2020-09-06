@@ -1,0 +1,240 @@
+syntax = "proto3";
+option go_package = ".;protobuf";
+// 用消息0
+message protocol {
+    uint32 id = 1;
+    bytes content = 2;
+}
+
+message sc_protocol_pack {
+    uint32 id = 1;
+    repeated protocol pack = 2;
+}
+
+// 进入房间
+message CsEnterRoom {
+    string player = 1;
+    string room = 2; // 房间类型eg: classic_ddz
+    string place = 3; // 场次 eg:normal
+}
+// 登录1
+message CsLogin {
+    string username = 1;
+    string password = 2;
+    string verify = 3;
+    string device = 4;
+    string ver = 5;
+    string channel = 6; // 渠道
+}
+// 注册2
+message CsRegister {
+    string username = 1;
+    string password = 2;
+    string cellphone = 3; // 手机
+    string verify = 4; // 验证信息
+    string device = 6; //设备号
+    string ver = 7; //版本
+    string local = 8; // 地区
+    string channel = 9; // 渠道
+}
+message ScRegisterSuccess {
+}
+// 登录数据
+message ScLoginSuccess {
+    string player = 1; // 用户数据
+    int32 Id = 2;
+    string Uuid = 3;
+    string NickName = 4;
+    string Name = 5;
+    string Password = 6;
+    int64 Gold = 7;
+    int64 Coin = 8;
+    int64 RoomCard = 9;
+    int32 Sex = 10;
+    string Ver = 11;
+    int64 Exp = 12;
+    string Channel = 13;
+    string Phone = 14;
+    string Email = 15;
+    string Token = 16;
+    string Head = 17;
+    int64 Time = 18; // 时间戳
+    int64 UnionId = 19;
+}
+
+message ScServers {
+    string GameServer = 1;
+    string ApiServer = 2;
+}
+
+// 操作错误
+message ScError {
+    int32 code = 1; // code=-1 失败
+    string reason = 2; //失败原因
+}
+
+message Prop {
+    int32 pid = 1; // 道具ID
+    int32 size = 3; // 数量
+    int64 limitTime = 4; // 期限
+}
+
+message ScPropList {
+    repeated Prop pack = 1;
+}
+
+// 公告列表
+message ScNoticeList {
+    repeated ScNotice pack = 1;
+}
+// 公告
+message ScNotice {
+    string title = 1;
+    string content = 2;
+}
+// 活动列表
+message ScActivitiesList {
+    repeated ScActivity pack = 1;
+}
+// 活动
+message ScActivity {
+    string title = 1;
+    string content = 2;
+    string img = 3;
+    string time = 4;
+}
+
+message cs_game_action {
+    uint32 id = 1; //see protocol.lua
+    uint32 reply = 2;
+    repeated int32 pokers = 3; //牌
+}
+// 心跳消息
+message heartbeat {
+}
+
+message CsCreateUnion {
+    string name = 1;
+    string des = 2; // 宣言
+    string max = 3; // 人数上限
+}
+message ScCreateUnion {
+    bool ok = 1;
+    string reason = 2;
+    ScUnionInfo info = 3;
+}
+message CsJoinUnion {
+    int32 unionId = 1;
+}
+
+message ScJoinUnion {
+    bool ok = 1;
+    string reason = 2;
+    ScUnionInfo info = 3;
+}
+
+message CsQueryUnion {
+    string name = 1;
+}
+
+message CsUnionInfo {
+    int64 unionId = 1;
+}
+
+message ScUnionInfo {
+    int64 id = 1;
+    string name = 2;
+    int32 level = 3;
+    string notice = 4;
+    string des = 5;
+    int64 score = 6;
+    int64 master_id = 7;
+    string creator = 8;
+    int64 create_time = 9;
+    int32 max_member = 10;
+    int32 status = 11;
+    int32 rank = 12;
+    repeated ScUnionMember members = 13;
+    int32 current_member = 14;
+    string master_uuid = 15;
+}
+message ScQueryUnion {
+    repeated ScUnionInfo unions = 1;
+}
+
+// 获取邮件
+message CsMailReq {
+}
+// 读取邮件
+message CsReadMail {
+    int64 mailId = 1;
+    bool confirm = 2;
+}
+
+// 邮件列表
+message ScMails {
+    repeated Mail mails = 1;
+}
+// 邮件
+message Mail {
+    int64 id = 1;
+    int32 type = 2;
+    string sender = 3;
+    string receiver = 4;
+    string title = 5;
+    string content = 6;
+    string attach = 7;
+    bool read = 8;
+}
+// 公会成员
+message ScUnionMember {
+    string name = 1;
+    int64 level = 2;
+    int64 unionVal = 3; // 贡献值
+    string head = 4;
+    string playerUuid = 5;
+}
+
+message CsExitUnion {
+    int64 unionId = 1;
+}
+message ScExitUnion {
+    bool ok = 1;
+    string des = 2;
+}
+// 公会设置
+message CsUnionSettings {
+    string notice = 1; // 公告
+    string des = 2; // 描述
+    int32 verify = 3; // 验证级别 //0=open// 1= 验证 // 2= 拒绝
+}
+
+// 转让管理员
+message CsTransferMaster {
+    string uuid = 1;
+}
+message ScTransferMaster {
+    string uuid = 1;
+}
+// 踢出成员
+message CsTickMember {
+    string uuid = 1;
+}
+message ScTickMember {
+    string uuid = 1;
+}
+// 公会排行榜
+message CsUnionRank {
+
+}
+message ScUnionRank {
+    repeated ScUnionInfo unions = 1;
+}
+
+// 位置信息
+message CsLocation {
+    string location = 1;
+}
+message ScLocation {
+    string location = 1;
+}

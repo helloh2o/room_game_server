@@ -1,0 +1,1 @@
+nohup ./debug_main &

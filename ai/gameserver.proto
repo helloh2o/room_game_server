@@ -1,0 +1,510 @@
+syntax = "proto3";
+package ai;
+
+message Test {
+	uint32 id = 1;
+}
+
+message protocol {
+    uint32 id                  = 1;
+    bytes content              = 2;   
+}
+
+message sc_protocol_pack {
+    uint32 id                  = 1;
+    repeated protocol pack              = 2;
+}
+
+message heartbeat {
+}
+
+message sc_game_debug {
+	string info				= 1;
+}
+
+message st_hu_desc {
+    int32 type1                = 1;
+    int32 type2                = 2;
+    int32 gen                  = 3;
+    bool  self_mo              = 4;
+    int32 fan                  = 5;
+    repeated int32 types                = 6;
+    int32 order                = 7;    //胡牌顺序
+    int32 give_hu_seat         = 8;    //放胡的人    
+}
+
+message sc_game_hide_actions {
+
+
+}
+
+message stplayer_info {
+    int64  oid 	              = 1;
+	string id					  = 2;
+	string idtype				  = 3;
+	string nick_name	          = 4;
+    int64 room_card              = 5;
+	int64 gold		          = 6;
+	int32  sex		              = 7;
+    string portrait              = 8;
+    string ip                    = 9;
+    string location              = 10;
+    int32 exp                    = 11;
+    bool online                  = 12;
+	bool auto_play 			  = 13;
+	string signature             = 14;
+}
+
+message st_hand_seq {
+    int32 count = 1;
+    repeated int32  pokers                 = 2[packed=true];
+}
+
+message scenter_seat_info {
+	stplayer_info  player_info   = 1;    
+	bool ready					  = 2;
+    int32 seat_index             = 3;
+    int32 money                  = 4;    
+}
+
+message sccontinue_seat_info {
+	int32 seat_index			  = 1;
+    stplayer_info player_info    = 2;	
+    bool ready                   = 3;
+    int32 lack                   = 4;
+    bool is_hu					  = 5;
+    repeated int32 hu_seq                 = 6;
+    int32 hand_seq_count         = 7;
+	int32 mo_count			      = 8;
+    st_hand_seq hand_seq         = 9;
+    repeated sccomplex_tile complex_seq   = 10;
+    repeated int32 chued_seq              = 11;
+    st_hu_desc hu_desc           = 12;
+    bool is_baojiao              = 13; // 是否报叫
+    int32 money                  = 14;
+    int32 sure_action            = 15; // 确认的动作
+	int32 piao					  = 16;
+	repeated int32 bai_pai				  = 17;
+	repeated int32 bai_pai_hu_seq		  = 18;
+}
+
+message cs_ready_game {
+    int32 mingpai   = 1; //明牌开始
+}
+
+message cs_leave_room {
+	string why = 1;
+}
+
+message cs_game_action {
+	uint32 id = 1; //see protocol.lua
+    uint32 reply = 2;
+	repeated int32 pokers = 3[packed=true];  //牌
+}
+
+message st_lack_info {
+    int32 seat_index = 1;
+    int32 lack = 2;
+    
+}
+
+message sc_lack_infos {
+
+    repeated st_lack_info infos = 1;
+}
+
+message st_dismiss_info {
+    int32 seat_index = 1;
+    int32 dismiss = 2;
+}
+
+message sc_continue_game {
+
+    int32 banker_seat                = 1;
+	int32 seat_index				  = 2;
+	int32 lack_second				  = 3;
+	int32 curr_turn				  = 4; // waiting for chu
+	int32 turn_second				  = 5;
+	bool thinking					  = 6; 
+    int32 think_second               = 7;
+	repeated int32 show_actions = 8;
+    repeated sccontinue_seat_info seat_infoes = 9;
+    int32 tiles_remain               = 10;
+	int32 roomid					  = 11;
+    int32 room_base                  = 15;
+    string room_pwd                  = 16;    
+    int32  current_round             = 17; //当前局数
+    string game_config               = 18;
+    string gametype                  = 19; //wzmj, bloodwar
+    string place                     = 20; //custom, wzmj_c1  
+    int32 owner_seat                 = 21; // 房主
+    sc_exchange_info exchange_info   = 22; // 换牌信息
+    bool dismiss_apply               = 23;
+    int32 dismiss_second             = 24;
+    repeated st_dismiss_info dismiss_info     = 25;  //0代表可以选择，1代表同意, 2代表拒绝
+    int32 last_chued_seat_index      = 26;  //上次出牌玩家
+    int32 creater_id                 = 27;
+    string creater_type              = 28;
+}
+
+message sc_enter_room_failed {
+	uint32 reason = 2;  //0代表未知错误，1代表密码错误 2代表房间已经满了
+	string desc = 3;
+}
+
+message sc_enter_room {
+	int32 seat_index			   = 2;
+	repeated scenter_seat_info seat_infoes = 3;
+    int32  room_base               = 7;
+    string game_config            = 8;
+    string gametype               = 9; //wzmj, bloodwar
+    string place                  = 10; //custom, wzmj_c1
+    string room_pwd               = 11; //房间密码
+    int32  current_round          = 12; //当前局数
+    int32 owner_seat              = 13; // 房主        
+    int32 creater_id               = 14;
+    string creater_type             = 15;
+    bool dismiss_apply               = 16;
+    int32 dismiss_second             = 17;
+    repeated st_dismiss_info dismiss_info     = 18;  //0代表可以选择，1代表同意, 2代表拒绝
+	repeated int32 show_actions = 19;
+}		
+
+message sc_enter_room_notify {
+	scenter_seat_info seat_info = 2;
+}
+
+message sc_ready_game_failed {
+	int32 reason = 2;  // 0代表未知错误
+}
+
+message sc_ready_game {
+    
+}
+
+message sc_ready_game_notify {
+	int32 seat_index = 2;
+}
+
+message sc_leave_room_failed {
+	int32 reason 	= 2; //0 代表未知错误
+}
+
+message sc_leave_room {
+    int32  result = 1;
+    int32  reason = 2;
+    string why = 3;
+}
+
+message sc_leave_room_notify {
+	int32 seat_index 	= 1;
+}
+
+message sccomplex_tile {
+	int32 type = 1;
+	int32 id	= 2;
+    repeated int32 ids  = 3;  //因为有幺鸡代
+    int32 sub_type = 4;
+}	
+
+message all_seq_info {
+    int32 seat_index           	    = 1;
+    int32 total_gold               = 2;
+    int32 money_change             = 3;
+    repeated int32 pokers           = 4[packed = true];
+}
+
+message one_ju_seq_info {
+    repeated all_seq_info seq_infos    = 1;
+    bool         liuju        = 2;
+}
+
+message sc_end_game {
+    repeated all_seq_info seq_infos    = 1;
+    int32 beishu              = 2;
+    bool liuju                = 3;
+    int32 current_round       = 4;
+    int32 total_round         = 5;
+    bool is_game_group_end    = 6;
+}
+
+message sc_end_game_group {
+    repeated one_ju_seq_info game_seq_infos = 1;
+    repeated int32 consume_card             = 2;    //房卡消耗
+    int32 first_round_start_time   = 3;    //第一局开始时间
+}
+
+message sc_game_action_failed {
+    uint32 id                          = 1;
+    uint32 reason                      = 2;
+}
+
+message sc_game_refresh_hand_seq {
+    // seq为数字seq
+    int32 action_id                    = 1;
+	st_hand_seq  act_hand_seq          = 2; //当前牌的seq
+	repeated sccomplex_tile act_complex_seq	    = 3; //复牌的seq
+	repeated int32	act_chued_seq			    = 4 [packed=true];
+    int32 last_chued_seat_index        = 5;
+	repeated int32 bai_pai						= 6;
+}
+
+message st_money_transfer {
+    int32 person                       = 1; //seat_index, 5代表马
+    int32 atm                          = 2; //seat_index, 5代表马
+    int32 money                        = 3;
+    int32 transfer                     = 4; //转移给某人
+    int32 gang_status                  = 5; //1代表普通杠牌, 2代表前四杠牌, 3代表后四杠牌
+}
+
+message sc_game_action {
+    uint32 act_id 				    = 1;
+    uint32 act_reply                = 2;
+    int32 act_pokers_type           = 3;
+	repeated int32 pokers        	= 4[packed = true];
+    st_hand_seq acted_hand_seq      = 5;
+    uint32 next_turn                = 6;
+}
+
+message sc_game_action_notify {
+	uint32 act_id 				       = 1;	
+    uint32 act_reply                   = 2;
+    int32 act_seat_index               = 3;
+    int32 act_pokers_type              = 4;
+	repeated int32 pokers              = 5[packed = true]; //打出的牌
+    st_hand_seq acted_hand_seq         = 6;
+    uint32 next_turn                   = 7;
+}
+
+message hand_seq_info {
+
+    int32  seat_index = 1;
+    st_hand_seq hand_seq   = 2;
+    int32 mingpai = 3;
+}
+
+message sc_start_game {
+	repeated hand_seq_info  other_infoes   = 1;
+	hand_seq_info  you_seq_info   = 2;
+    int32  tiles_remain           = 3;
+    int32 banker_seat             = 4;
+}
+
+message sc_game_show_actions {
+	int32 timeout = 1;
+	repeated int32 show_actions = 2;
+}
+
+message sc_sure_lack {
+	int32 timeout  = 2;
+}
+
+message sc_ready_timer {
+	int32 timeout = 1;
+}
+
+message sc_game_turn {
+	int32  timeout 	= 1;
+    repeated int32 show_actions = 2;
+}
+
+message sc_game_turn_notify {
+    int32 timeout      = 1;
+	int32 seat_index 	= 2;
+}
+
+message sc_broadcast {
+    string msg = 1;
+}
+
+message sc_sure_exchange {
+	int32 timeout = 1;
+}
+
+message sc_exchange_info {
+	repeated int32 exchange_out = 1;
+	repeated int32 exchange_in = 2;
+	repeated bool maipai = 3;
+	int32 exchange_type = 4;
+	hand_seq_info  you_seq_info   = 5;
+	int32 exchange_in_seat	= 6;
+}
+
+message sc_exchange_tiles_response {
+	bool result = 1;
+	hand_seq_info  you_seq_info   = 2;
+	repeated int32 exchange_out = 3;
+}
+
+message sc_gift_action {
+    int32 send_seat    = 1;
+    int32 receive_seat  = 2;
+    int32 gift_id      = 3;
+}
+
+message sc_seat_voiceid {
+    repeated int32 voiceid = 1;
+}
+
+message scseat_end_group_info {
+    int32 zi_mo_times = 1;
+    int32 jie_pao_times = 2;
+    int32 dian_pao_times = 3;
+    int32 an_gang_times = 4;
+    int32 ming_gang_times = 5;
+    int32 total_score = 6;
+    int32 consume_card = 7;
+    bool is_big_winner = 8;
+}
+
+message sc_end_group_info {
+    repeated scseat_end_group_info seat_infoes = 1;
+}
+
+message sc_sure_piao {
+	int32 timeout = 1;
+}
+
+message sc_piao_infos {
+    repeated int32 seat_piao_info = 1;
+}
+
+message seat_gps_info {
+    int32  seat_index = 1;
+    string coordinate = 2;
+	string address = 3;
+}
+
+message sc_room_gps_info {
+	repeated seat_gps_info gps_infoes = 1;
+}
+
+message sc_dizhu_info {
+    int32   dizhu_seat = 1;
+    repeated int32 dizhu_pokers = 2[packed = true];
+    st_hand_seq  hand_seq   = 3;
+}
+////////////////////////////////////////////////////////////////////////////////
+message cs_inspect_player {
+    int64 oid = 1;
+}
+
+message sc_inspect_player {
+    int64 oid = 1;
+    string nick_name = 2;
+}
+
+message cs_dismiss_room {
+    int32  type = 1;   //1申请解散, 2同意，3拒绝
+}
+
+message sc_dismiss_room {
+    int32  type = 1;   //1申请解散成功, 2同意成功，3拒绝成功
+    int32  time = 2;
+}
+
+message sc_dismiss_room_result {
+    int32  result = 1;   //0成功, 1失败
+    repeated int32  op_seats = 2;
+}
+
+message sc_dismiss_room_notify {
+    int32  seat_index = 1;
+    int32  type = 2;
+    int32  time = 3;
+}
+
+message sc_qian_si_end {
+}
+
+message sc_sure_action {
+  int32 seat = 1;
+  int32 action_id = 2;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+message cs_add_bot {
+    int32 count = 1;
+}
+
+message cs_debug_dismiss_room {
+     
+}
+
+message cs_debug_run_action {
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+message cs_game_auto {
+
+}
+
+message sc_game_auto {
+    bool auto   = 1;
+}
+
+message sc_game_auto_notify {
+    int32   seat_index = 1;
+    bool    auto      = 2;
+}
+
+message cs_game_manual {
+
+}
+
+message cs_resend_action {
+
+}
+
+message cs_change_online {
+    bool    online  = 1;
+}
+
+////////////////////////匹配房间
+message cs_match_game {
+
+
+}
+
+message cs_ready_match_game {
+
+
+}
+
+message sc_enter_match_room {
+
+
+}
+
+message cs_game_refresh_seq {
+
+}
+
+// Chat
+message cs_chat {
+    int32  seat_index         = 1;
+    string msg                = 2;
+    int32  msg_type           = 3;
+}
+
+// 玩家掉线
+message sc_change_online {
+    int32   seat_index = 1;
+    bool    online	= 2;
+}
+
+message cs_gift_action {
+    int32 receive_seat     = 1;
+    int32 gift_id          = 2;
+}
+
+message cs_submit_voiceid {
+    int32 voiceid  = 1;
+}
+
+message cs_seat_gps {
+    string coordinate = 1;
+	string address = 2;
+}

@@ -1,0 +1,22 @@
+{
+  "LogLevel": "debug",
+  "LogPath": "",
+  "TCPAddr": "127.0.0.1:3563",
+  "WSAddr": "0.0.0.0:3565",
+  "HTTPAddr": "0.0.0.0:6100",
+  "MaxConnNum": 20000,
+  "DBSource": "user=dz_db password=d2SQC4nEeqDF958qLiu2 dbname=dz host=pgm-bp1rx6909s61kx0f9o.pg.rds.aliyuncs.com port=1433 sslmode=disable",
+  "DBMaxConn": 200,
+  "DBIdleConn": 10,
+  "AIRPC": "127.0.0.1:7080",
+  "Games": [
+    {
+      "name": "classic_ddz",
+      "root": "./lua/game/test_game/root.lua",
+      "vm_size": 1,
+      "room": 10,
+      "des": "性能瓶颈的时候通过命令动态创建新的虚拟机个数，各场次房间个数量由LUA来定"
+    }
+  ],
+  "EncryptStr": "TH27Cco/KLPtga3Z1BLMNwTaEXp/B8GnLQpKbkKk8esx6qCIQ1eYdPdfDizG+WxG04lSpfXXry8c2+OHgqxEOSGqiimMsMCE/1tt/Ku0SLqT5Hj2n949yx7VaQvyNR+5WWjNoVMVg6Ps9BtkeeDPDb1rIvMgjXJ274DfcE1OkPg4JLyuycMyGvvlXkDuhp0CsjTdECNdd9E6HUlab0VznjZnqbEnXP3pjqjQaoXc1lQ7YSqm5mPIPNKUi3szDMecAxf6AVYUvxkrPpVPWAi1msX+Zrh8AC6bSxhR6MThfo/YBSVBBufCJs4wFpJHl2K3ZQ/wdb5gouITUJGWmVW2cQ=="
+}

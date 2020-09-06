@@ -1,0 +1,2 @@
+DEBUG = false
+print(DEBUG)
